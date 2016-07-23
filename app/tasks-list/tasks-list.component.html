@@ -1,0 +1,18 @@
+<div>
+    <ul>
+        <li *ngFor="let task of Model.tasks">
+            <div>
+                <label>Name:</label>
+                <input type="text" [(ngModel)]="task.name" />
+            </div>
+        </li>
+    </ul>
+
+    <div>
+        <button name="btn-cancel" (click)="OnCancelClick()">Cancel</button>
+        <hr/>
+        <pre>
+            {{diagnostic}}
+        </pre>
+    </div>
+</div>
