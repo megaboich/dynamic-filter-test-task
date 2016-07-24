@@ -1,3 +1,4 @@
+
 export enum TaskStatus {
     open,
     inProgress,
@@ -25,8 +26,8 @@ export class Task {
     startDate: Date
     endDate: Date
     description: string
-}
 
-export class TasksListModel {
-    tasks: Task[] = []
+    statusText: string
+    typeText: string
+    colorText: string
 }

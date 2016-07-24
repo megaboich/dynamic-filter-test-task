@@ -11,6 +11,11 @@ export function isNotEmptyArray(value: any[]): boolean {
     return (value && value.length > 0);
 }
 
+export function isNullOrEmptyArray(value: any[]): boolean {
+    return (!value || value.length == 0);
+}
+
+
 export function assertNoUndefined(value: any[]): void {
     if (!value) return;
     value.forEach(x => {

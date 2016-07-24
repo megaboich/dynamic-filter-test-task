@@ -1,0 +1,110 @@
+{
+    "filters": [
+        {
+            "name": "Blue Open Orders",
+            "filter": {
+                "expression": "AND",
+                "parameters": [
+                    {
+                        "expression": "EQUALS",
+                        "parameters": [
+                            {
+                                "expression": "Status"
+                            },
+                            {
+                                "expression": "Open"
+                            }
+                        ]
+                    },
+                    {
+                        "expression": "EQUALS",
+                        "parameters": [
+                            {
+                                "expression": "Color"
+                            },
+                            {
+                                "expression": "Blue"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Other Open Orders",
+            "filter": {
+                "expression": "AND",
+                "parameters": [
+                    {
+                        "expression": "EQUALS",
+                        "parameters": [
+                            {
+                                "expression": "Status"
+                            },
+                            {
+                                "expression": "Open"
+                            }
+                        ]
+                    },
+                    {
+                        "expression": "EQUALS",
+                        "parameters": [
+                            {
+                                "expression": "Type"
+                            },
+                            {
+                                "expression": "AskUser"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Multi Filter",
+            "filter": {
+                "expression": "OR",
+                "parameters": [
+                    {
+                        "expression": "EQUALS",
+                        "parameters": [
+                            {
+                                "expression": "Status"
+                            },
+                            {
+                                "expression": "AskUser"
+                            }
+                        ]
+                    },
+                    {
+                        "expression": "AND",
+                        "parameters": [
+                            {
+                                "expression": "EQUALS",
+                                "parameters": [
+                                    {
+                                        "expression": "Type"
+                                    },
+                                    {
+                                        "expression": "AskUser"
+                                    }
+                                ]
+                            },
+                            {
+                                "expression": "EQUALS",
+                                "parameters": [
+                                    {
+                                        "expression": "Color"
+                                    },
+                                    {
+                                        "expression": "AskUser"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

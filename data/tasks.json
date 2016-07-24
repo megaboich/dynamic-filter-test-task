@@ -10,6 +10,16 @@
         "Description": "Install new KoelKast SF-123"
     },
     {
+        "Id": "uniqwo1-1",
+        "Name": "WO-0001-1",
+        "Status": "Open",
+        "Type": "Installation",
+        "StartDate": "22-04-2016 13:00:00",
+        "EndDate": "22-04-2016 14:00:00",
+        "Color": "Blue",
+        "Description": "Install new KoelKast SF-123 (Blue)"
+    },
+    {
         "Id": "uniqwo2",
         "Name": "WO-0002",
         "Status": "In Progress",
