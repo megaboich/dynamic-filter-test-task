@@ -5,7 +5,14 @@
     <div>
         Filter: {{filterBox.name}}
     </div>
+    <div *ngFor="let interaction of filterBox.interactions">
 
+        {{interaction.modelFieldName}}
+        <select [(ngModel)]="interaction.selectedValue">
+            <option *ngFor="let item of interaction.filterInfo.enumFilterMapping" [ngValue] = "item.enumValue">{{item.displayName}}</option>
+        </select>
+
+    </div>
     <button (click)="applyFilterBox(filterBox)">Apply</button>
     <button (click)="resetFilterBox(filterBox)">Reset</button>
     <button (click)="closeFilterBox(filterBox)">Close</button>

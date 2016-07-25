@@ -1,5 +1,5 @@
 import { FilterNode, FilterNodeType, FilterMetaInfo, EnumListFilterMetaInfo, FilterUserInputType } from './filter-config.model'
-import { isNotEmptyArray } from '../shared/utils'
+import { isNotEmptyArray, isNullOrEmptyString } from '../shared/utils'
 import { EnumConverter } from '../shared/enum.converter'
 
 export class FilterBox {
@@ -10,6 +10,7 @@ export class FilterBox {
     filterApplied: boolean = false
     userInputActivated: boolean = false;
     filterFunction: (x: any) => boolean;
+    hasEmptyInteractions: boolean = false;
 
     constructor(name: string, filterNode: FilterNode, meta: FilterMetaInfo[]) {
         this.name = name;
@@ -53,11 +54,16 @@ export class FilterBox {
 
     resetFilterFuntion(): void {
         this.filterFunction = null;
+        this.interactions.forEach(i => {
+            i.selectedValue = null;
+        })
     }
 
     initFilterFunction(): void {
-        if (isNotEmptyArray(this.interactions)) {
-            throw 'Not implemented yet';
+        this.hasEmptyInteractions = false;
+        if (this.interactions.find(i => i.selectedValue === null)) {
+            this.hasEmptyInteractions = true;
+            return;
         }
 
         let functionBody = this.getFunctionBody(this.filterNode);
@@ -74,9 +80,20 @@ export class FilterBox {
                 let meta = this.meta.find(m => m.configFieldName == configFieldName);
                 let fieldName = meta.modelFieldName;
                 let value = node.parameters[1].value;
+                let contractvalue: any = null;
+                if (node.parameters[1].type == FilterNodeType.ask) {
+                    //update value using the interaction contracts
+                    let contract = this.interactions.find(i => i.modelFieldName == meta.modelFieldName);
+                    if (!contract) {
+                        throw `Error: can't resolve interaction: ${meta.modelFieldName}`;
+                    }
+                    contractvalue = contract.selectedValue;
+                }
                 if (meta.userInputType == FilterUserInputType.enumlist) {
                     let enummeta = meta as EnumListFilterMetaInfo;
-                    let valnumeric = EnumConverter.convertStringToEnum(value, enummeta.enumConversionMapping);
+                    let valnumeric = contractvalue == null
+                        ? EnumConverter.convertStringToEnum(value, enummeta.enumConversionMapping)
+                        : contractvalue;
                     return `x.${fieldName} === ${valnumeric}`;
                 }
                 throw 'Not supported user input type';
@@ -104,7 +121,7 @@ export class FilterBox {
 
 export abstract class FilterInteraction {
     modelFieldName: string
-    selectedValue: string
+    selectedValue: any
     filterInfo: FilterMetaInfo
 }
 
