@@ -34,9 +34,9 @@ export class TasksListComponent implements OnInit {
         private configService: FiltersConfigService) {
 
         this.Model = new TasksListModel();
-        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Status", "status", TaskConverter.taskStatusDisplayMapping, TaskConverter.taskStatusMapping));
-        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Type", "type", TaskConverter.taskTypeDisplayMapping, TaskConverter.taskTypeMapping));
-        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Color", "color", TaskConverter.taskColorDisplayMapping, TaskConverter.taskColorMapping));
+        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Status", "status", TaskConverter.taskStatusEnumConverter));
+        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Type", "type", TaskConverter.taskTypeEnumConverter));
+        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Color", "color", TaskConverter.taskColorEnumConverter));
     }
 
     get diagnostic() { return JSON.stringify(this.Model, null, 2); }
@@ -63,19 +63,11 @@ export class TasksListComponent implements OnInit {
     get tasksToDisplay(): Task[] {
         let filterFunction = (task: Task): boolean => {
             if (isNotEmptyArray(this.Model.filterBoxes)) {
-                let hasAtLeastOneFilter = false;
-                for (let fi = 0; fi < this.Model.filterBoxes.length; ++fi) {
-                    let fb = this.Model.filterBoxes[fi];
-                    if (fb.filterFunction) {
-                        hasAtLeastOneFilter = true;
-                        if (fb.filterFunction(task)) {
-                            return true;
-                        }
-                    }
+                let filterFunctions = this.Model.filterBoxes.map(box => box.filterFunction).filter(f => f != null);
+                if (filterFunctions.length > 0) {
+                    return filterFunctions.every(f => f(task));
                 }
-                return hasAtLeastOneFilter
-                    ? false
-                    : true;
+                return true;
             } else {
                 return true;
             }

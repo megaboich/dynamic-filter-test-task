@@ -1,4 +1,4 @@
-import { EnumDisplayMapping } from '../shared/enum.converter'
+import { EnumConverter, EnumDisplayMapping } from '../shared/enum.converter'
 
 export enum FilterNodeType {
     and,
@@ -32,14 +32,12 @@ export class FilterMetaInfo {
 }
 
 export class EnumListFilterMetaInfo extends FilterMetaInfo {
-    enumFilterMapping: EnumDisplayMapping[];
-    enumConversionMapping: any;
+    enumConverter: EnumConverter;
 
-    constructor(configFieldName: string, modelFieldName: string, enumFilterMapping: EnumDisplayMapping[], enumConversionMapping: any) {
+    constructor(configFieldName: string, modelFieldName: string, enumConverter: EnumConverter) {
         super(configFieldName, modelFieldName, FilterUserInputType.enumlist)
 
-        this.enumFilterMapping = enumFilterMapping;
-        this.enumConversionMapping = enumConversionMapping;
+        this.enumConverter = enumConverter;
     }
 }
 

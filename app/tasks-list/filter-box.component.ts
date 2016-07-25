@@ -40,6 +40,9 @@ export class FilterBoxComponent {
 
     applyFilterBox(): void {
         this.filterBox.initFilterFunction();
+        if (this.filterBox.hasEmptyInteractions) {
+            return;
+        }
         this.filterBox.filterApplied = true;
         this.filterBox.userInputActivated = false;
         this.filterChanged.emit(this.filterBox);

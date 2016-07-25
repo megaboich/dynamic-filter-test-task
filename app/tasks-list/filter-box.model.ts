@@ -92,7 +92,7 @@ export class FilterBox {
                 if (meta.userInputType == FilterUserInputType.enumlist) {
                     let enummeta = meta as EnumListFilterMetaInfo;
                     let valnumeric = contractvalue == null
-                        ? EnumConverter.convertStringToEnum(value, enummeta.enumConversionMapping)
+                        ? enummeta.enumConverter.convertStringToEnum(value)
                         : contractvalue;
                     return `x.${fieldName} === ${valnumeric}`;
                 }

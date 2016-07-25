@@ -1,15 +1,12 @@
 <button *ngIf="!filterBox.filterApplied" (click)="toggleFilterBox(filterBox)">{{filterBox.name}}</button>
 <button *ngIf="filterBox.filterApplied" (click)="toggleFilterBox(filterBox)" style="background-color:yellow;">{{filterBox.name}}</button>
 
-<div *ngIf="filterBox.userInputActivated" style="border:solid 1px lime;">
-    <div>
-        Filter: {{filterBox.name}}
-    </div>
+<div *ngIf="filterBox.userInputActivated" style="border:solid 1px #aaa; padding: 10px;">
     <div *ngFor="let interaction of filterBox.interactions">
 
-        {{interaction.modelFieldName}}
+        {{interaction.filterInfo.configFieldName}}
         <select [(ngModel)]="interaction.selectedValue">
-            <option *ngFor="let item of interaction.filterInfo.enumFilterMapping" [ngValue] = "item.enumValue">{{item.displayName}}</option>
+            <option *ngFor="let item of interaction.filterInfo.enumConverter.mappingEnumToDisplay" [ngValue] = "item.enumValue">{{item.displayName}}</option>
         </select>
 
     </div>

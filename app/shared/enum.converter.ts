@@ -4,16 +4,20 @@ export class EnumDisplayMapping {
 }
 
 export class EnumConverter {
-    static convertStringToEnum(value: string, mapping: any): number {
-        let converted = mapping[value];
-        if (!converted) {
-            converted = mapping.default;
+    constructor(public mappingValueToEnum: any, public mappingEnumToDisplay: EnumDisplayMapping[]) {
+
+    }
+
+    convertStringToEnum(value: string): number {
+        let converted = this.mappingValueToEnum[value];
+        if (converted == undefined) {
+            throw `Wrong configuration: can't map value ${value}`;
         }
         return converted;
     }
 
-    static convertToDisplayValue(value: number, mapping: EnumDisplayMapping[]): string {
-        let match = mapping.find(x => x.enumValue === value);
+    convertToDisplayValue(value: number): string {
+        let match = this.mappingEnumToDisplay.find(x => x.enumValue === value);
         if (match) {
             return match.displayName;
         }

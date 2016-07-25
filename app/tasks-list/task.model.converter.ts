@@ -5,62 +5,29 @@ import { EnumConverter, EnumDisplayMapping } from '../shared/enum.converter'
 
 
 export class TaskConverter {
-    static taskColorMapping = {
-        default: TaskColor.blue,
+    static taskColorEnumConverter = new EnumConverter({
         "Blue": TaskColor.blue,
         "Purple": TaskColor.purple,
         "Black": TaskColor.black,
-    }
+    }, [{ enumValue: TaskColor.blue, displayName: "Blue" },
+            { enumValue: TaskColor.purple, displayName: "Purple" },
+            { enumValue: TaskColor.black, displayName: "Black" }]);
 
-    static taskStatusMapping = {
-        default: TaskStatus.open,
+    static taskStatusEnumConverter = new EnumConverter({
         "Open": TaskStatus.open,
         "In Progress": TaskStatus.inProgress,
         "Closed": TaskStatus.closed,
-    }
+    }, [{ enumValue: TaskStatus.open, displayName: "Open" },
+            { enumValue: TaskStatus.inProgress, displayName: "In Progress" },
+            { enumValue: TaskStatus.closed, displayName: "Closed" }]);
 
-    static taskTypeMapping = {
-        default: TaskType.maintenance,
+    static taskTypeEnumConverter = new EnumConverter({
         "Maintenance": TaskType.maintenance,
         "Installation": TaskType.installation,
         "Failure": TaskType.failure,
-    }
-
-
-    static taskStatusDisplayMapping: EnumDisplayMapping[] = [{
-        enumValue: TaskStatus.open,
-        displayName: "Open"
-    }, {
-            enumValue: TaskStatus.closed,
-            displayName: "Closed"
-        }, {
-            enumValue: TaskStatus.inProgress,
-            displayName: "In Progress"
-        }];
-
-    static taskTypeDisplayMapping: EnumDisplayMapping[] =
-    [{
-        enumValue: TaskType.installation,
-        displayName: "Installation"
-    }, {
-            enumValue: TaskType.maintenance,
-            displayName: "Maintenance"
-        }, {
-            enumValue: TaskType.failure,
-            displayName: "Failure"
-        }]
-
-    static taskColorDisplayMapping: EnumDisplayMapping[] =
-    [{
-        enumValue: TaskColor.blue,
-        displayName: "Blue"
-    }, {
-            enumValue: TaskColor.purple,
-            displayName: "Purple"
-        }, {
-            enumValue: TaskColor.black,
-            displayName: "Black"
-        }]
+    }, [{ enumValue: TaskType.installation, displayName: "Installation" },
+            { enumValue: TaskType.maintenance, displayName: "Maintenance" },
+            { enumValue: TaskType.failure, displayName: "Failure" }]);
 
     static BuildFromDTO(taskDTO: TaskDefinitionDTO): Task {
         let task = new Task();
@@ -69,14 +36,12 @@ export class TaskConverter {
         task.description = taskDTO.Description;
         task.startDate = moment(taskDTO.StartDate, 'YYYY-MM-DD HH:mm:ss').toDate();
         task.endDate = moment(taskDTO.EndDate, 'YYYY-MM-DD HH:mm:ss').toDate();
-        task.color = EnumConverter.convertStringToEnum(taskDTO.Color, this.taskColorMapping);
-        task.status = EnumConverter.convertStringToEnum(taskDTO.Status, this.taskStatusMapping);
-        task.type = EnumConverter.convertStringToEnum(taskDTO.Type, this.taskTypeMapping);
-
-        task.statusText = EnumConverter.convertToDisplayValue(task.status, TaskConverter.taskStatusDisplayMapping);
-        task.typeText = EnumConverter.convertToDisplayValue(task.type, TaskConverter.taskTypeDisplayMapping);
-        task.colorText = EnumConverter.convertToDisplayValue(task.color, TaskConverter.taskColorDisplayMapping);
-
+        task.color = this.taskColorEnumConverter.convertStringToEnum(taskDTO.Color);
+        task.status = this.taskStatusEnumConverter.convertStringToEnum(taskDTO.Status);
+        task.type = this.taskTypeEnumConverter.convertStringToEnum(taskDTO.Type);
+        task.colorText = this.taskColorEnumConverter.convertToDisplayValue(task.color);
+        task.statusText = this.taskStatusEnumConverter.convertToDisplayValue(task.status);
+        task.typeText = this.taskTypeEnumConverter.convertToDisplayValue(task.type);
         return task;
     }
 } 
