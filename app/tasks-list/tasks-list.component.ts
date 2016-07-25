@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router';
 
+import { FilterBoxComponent } from './filter-box.component'
 import { TasksService } from '../api/tasks/tasks.service'
 import { FiltersConfigService } from '../api/tasks/filters-config.service'
 
@@ -10,20 +11,19 @@ import { FilterConfigModel, FilterMetaInfo, FilterUserInputType, EnumListFilterM
 import { FilterConfigModelConverter } from './filter-config.model.converter'
 import { FilterBox } from './filter-box.model'
 
-import { isNullOrEmptyArray } from '../shared/utils'
+import { isNullOrEmptyArray, isNotEmptyArray } from '../shared/utils'
 
 export class TasksListModel {
     tasks: Task[] = []
     filtersMeta: FilterMetaInfo[] = []
     filterBoxes: FilterBox[]
     filtersConfig: FilterConfigModel
-    filterFunction: (task: Task) => boolean
 }
 
 @Component({
     selector: 'tasks-list',
     template: require('./tasks-list.component.html'),
-    directives: [],
+    directives: [FilterBoxComponent],
     providers: [TasksService, FiltersConfigService]
 })
 export class TasksListComponent implements OnInit {
@@ -61,28 +61,30 @@ export class TasksListComponent implements OnInit {
     }
 
     get tasksToDisplay(): Task[] {
-        if (this.Model.filterFunction) {
-            return this.Model.tasks.filter(this.Model.filterFunction);
-        }
-        else {
-            return this.Model.tasks;
-        }
+        let filterFunction = (task: Task): boolean => {
+            if (isNotEmptyArray(this.Model.filterBoxes)) {
+                let hasAtLeastOneFilter = false;
+                for (let fi = 0; fi < this.Model.filterBoxes.length; ++fi) {
+                    let fb = this.Model.filterBoxes[fi];
+                    if (fb.filterFunction) {
+                        hasAtLeastOneFilter = true;
+                        if (fb.filterFunction(task)) {
+                            return true;
+                        }
+                    }
+                }
+                return hasAtLeastOneFilter
+                    ? false
+                    : true;
+            } else {
+                return true;
+            }
+        };
+
+        return this.Model.tasks.filter(filterFunction);
     }
 
-    toggleFilterBox(filterBox: FilterBox): void {
-        console.log('clicked', filterBox.name);
-
-        if (isNullOrEmptyArray(filterBox.interactions)
-            && !filterBox.activated) {
-            // we just can apply filter
-            filterBox.activated = true;
-            this.Model.filterFunction = filterBox.getFilterFunction();
-            return;
-        }
-
-        if (filterBox.activated) {
-            filterBox.activated = false;
-            this.Model.filterFunction = null;
-        }
+    filterBoxChanged(filterBox: FilterBox): void {
+        console.log('filterBoxChanged', filterBox.name);
     }
 }   

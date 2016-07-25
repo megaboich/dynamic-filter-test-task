@@ -1,0 +1,12 @@
+<button *ngIf="!filterBox.filterApplied" (click)="toggleFilterBox(filterBox)">{{filterBox.name}}</button>
+<button *ngIf="filterBox.filterApplied" (click)="toggleFilterBox(filterBox)" style="background-color:yellow;">{{filterBox.name}}</button>
+
+<div *ngIf="filterBox.userInputActivated" style="border:solid 1px lime;">
+    <div>
+        Filter: {{filterBox.name}}
+    </div>
+
+    <button (click)="applyFilterBox(filterBox)">Apply</button>
+    <button (click)="resetFilterBox(filterBox)">Reset</button>
+    <button (click)="closeFilterBox(filterBox)">Close</button>
+</div>

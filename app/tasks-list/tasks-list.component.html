@@ -1,10 +1,7 @@
 <div>
-    <ul>
-        <li *ngFor="let filterBox of Model.filterBoxes">
-            <button *ngIf="!filterBox.activated" (click)="toggleFilterBox(filterBox)">{{filterBox.name}}</button>
-            <button *ngIf="filterBox.activated" (click)="toggleFilterBox(filterBox)" style="background-color:#00DEAD;">{{filterBox.name}}</button>
-        </li>
-    </ul>
+    <div *ngFor="let filterBox of Model.filterBoxes">
+        <filter-box [filterBox]="filterBox" (filterChanged)="filterBoxChanged(filterBox)"></filter-box>
+    </div>
 
     <ul>
         <li *ngFor="let task of tasksToDisplay">

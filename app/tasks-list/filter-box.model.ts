@@ -7,7 +7,9 @@ export class FilterBox {
     filterNode: FilterNode
     interactions: FilterInteraction[] = []
     meta: FilterMetaInfo[]
-    activated: boolean = false
+    filterApplied: boolean = false
+    userInputActivated: boolean = false;
+    filterFunction: (x: any) => boolean;
 
     constructor(name: string, filterNode: FilterNode, meta: FilterMetaInfo[]) {
         this.name = name;
@@ -49,7 +51,11 @@ export class FilterBox {
         }
     }
 
-    getFilterFunction(): (obj: any) => boolean {
+    resetFilterFuntion(): void {
+        this.filterFunction = null;
+    }
+
+    initFilterFunction(): void {
         if (isNotEmptyArray(this.interactions)) {
             throw 'Not implemented yet';
         }
@@ -58,7 +64,7 @@ export class FilterBox {
         functionBody = `return (${functionBody})`;
         console.log('func', functionBody);
         let func = new Function('x', functionBody) as (obj: any) => boolean;
-        return func;
+        this.filterFunction = func;
     }
 
     private getFunctionBody(node: FilterNode): string {
