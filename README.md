@@ -89,3 +89,4 @@ Demo is available [here](https://megaboich.github.io/dynamic-filter-test-task/#/
 - TypeScript. Because of a lot of advantages over JavaScript. Most significant is types and signatures checking during compilation.
 - SPA application framework: Angular2. Just framework to build UI. I think for this task ReactJS might suit better, but currently I am working with Angular2, so it was selected to speed up process a bit.
 - CSS styles framework: (TBD)
+- Webpack. Very powerful tool to build and bundle application.
