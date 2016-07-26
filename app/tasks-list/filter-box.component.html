@@ -4,9 +4,9 @@
 <div *ngIf="filterBox.userInputActivated" style="border:solid 1px #aaa; padding: 10px;">
     <div *ngFor="let interaction of filterBox.interactions">
 
-        {{interaction.filterInfo.configFieldName}}
+        {{interaction.fieldMetaInfo.configFieldName}}
         <select [(ngModel)]="interaction.selectedValue">
-            <option *ngFor="let item of interaction.filterInfo.enumConverter.mappingEnumToDisplay" [ngValue] = "item.enumValue">{{item.displayName}}</option>
+            <option *ngFor="let item of interaction.fieldMetaInfo.enumConverter.mappingEnumToDisplay" [ngValue] = "item.enumValue">{{item.displayName}}</option>
         </select>
 
     </div>

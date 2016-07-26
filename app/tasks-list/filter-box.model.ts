@@ -1,18 +1,27 @@
-import { FilterNode, FilterNodeType, FilterMetaInfo, EnumListFilterMetaInfo, FilterUserInputType } from './filter-config.model'
+import { FilterNode, FilterNodeType, FieldMetaInfo, EnumListMetaInfo, UserInputType } from './filter-config.model'
 import { isNotEmptyArray, isNullOrEmptyString } from '../shared/utils'
 import { EnumConverter } from '../shared/enum.converter'
+
+export abstract class FilterInteraction {
+    selectedValue: any
+    fieldMetaInfo: FieldMetaInfo
+}
+
+export class FilterEnumListInteraction extends FilterInteraction {
+    fieldMetaInfo: EnumListMetaInfo
+}
 
 export class FilterBox {
     name: string
     filterNode: FilterNode
     interactions: FilterInteraction[] = []
-    meta: FilterMetaInfo[]
+    meta: FieldMetaInfo[]
     filterApplied: boolean = false
     userInputActivated: boolean = false;
     filterFunction: (x: any) => boolean;
     hasEmptyInteractions: boolean = false;
 
-    constructor(name: string, filterNode: FilterNode, meta: FilterMetaInfo[]) {
+    constructor(name: string, filterNode: FilterNode, meta: FieldMetaInfo[]) {
         this.name = name;
         this.filterNode = filterNode;
         this.meta = meta;
@@ -35,11 +44,10 @@ export class FilterBox {
 
             // create interaction object
             switch (filterInfo.userInputType) {
-                case FilterUserInputType.enumlist:
+                case UserInputType.enumlist:
                     let interaction = new FilterEnumListInteraction();
-                    interaction.modelFieldName = filterInfo.modelFieldName;
                     interaction.selectedValue = null;
-                    interaction.filterInfo = filterInfo as EnumListFilterMetaInfo;
+                    interaction.fieldMetaInfo = filterInfo as EnumListMetaInfo;
                     this.interactions.push(interaction);
                     break;
                 default:
@@ -83,14 +91,14 @@ export class FilterBox {
                 let contractvalue: any = null;
                 if (node.parameters[1].type == FilterNodeType.ask) {
                     //update value using the interaction contracts
-                    let contract = this.interactions.find(i => i.modelFieldName == meta.modelFieldName);
+                    let contract = this.interactions.find(i => i.fieldMetaInfo.modelFieldName == meta.modelFieldName);
                     if (!contract) {
                         throw `Error: can't resolve interaction: ${meta.modelFieldName}`;
                     }
                     contractvalue = contract.selectedValue;
                 }
-                if (meta.userInputType == FilterUserInputType.enumlist) {
-                    let enummeta = meta as EnumListFilterMetaInfo;
+                if (meta.userInputType == UserInputType.enumlist) {
+                    let enummeta = meta as EnumListMetaInfo;
                     let valnumeric = contractvalue == null
                         ? enummeta.enumConverter.convertStringToEnum(value)
                         : contractvalue;
@@ -117,14 +125,4 @@ export class FilterBox {
                 }
         }
     }
-}
-
-export abstract class FilterInteraction {
-    modelFieldName: string
-    selectedValue: any
-    filterInfo: FilterMetaInfo
-}
-
-export class FilterEnumListInteraction extends FilterInteraction {
-    filterInfo: EnumListFilterMetaInfo
 }

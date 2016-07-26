@@ -4,7 +4,7 @@ import * as moment from 'moment'
 import { EnumConverter, EnumDisplayMapping } from '../shared/enum.converter'
 
 
-export class TaskConverter {
+export class TaskModelConverter {
     static taskColorEnumConverter = new EnumConverter({
         "Blue": TaskColor.blue,
         "Purple": TaskColor.purple,

@@ -2,8 +2,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core'
 import { Router } from '@angular/router';
 
 import { Task, TaskColor, TaskStatus, TaskType } from './task.model'
-import { TaskConverter } from './task.model.converter'
-import { FilterConfigModel, FilterMetaInfo, FilterUserInputType, EnumListFilterMetaInfo } from './filter-config.model'
+import { TaskModelConverter } from './task.model.converter'
+import { FilterConfigModel, FieldMetaInfo, UserInputType, EnumListMetaInfo } from './filter-config.model'
 import { FilterConfigModelConverter } from './filter-config.model.converter'
 import { FilterBox } from './filter-box.model'
 

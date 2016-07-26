@@ -6,8 +6,8 @@ import { TasksService } from '../api/tasks/tasks.service'
 import { FiltersConfigService } from '../api/tasks/filters-config.service'
 
 import { Task, TaskColor, TaskStatus, TaskType } from './task.model'
-import { TaskConverter } from './task.model.converter'
-import { FilterConfigModel, FilterMetaInfo, FilterUserInputType, EnumListFilterMetaInfo } from './filter-config.model'
+import { TaskModelConverter } from './task.model.converter'
+import { FilterConfigModel, FieldMetaInfo, UserInputType, EnumListMetaInfo } from './filter-config.model'
 import { FilterConfigModelConverter } from './filter-config.model.converter'
 import { FilterBox } from './filter-box.model'
 
@@ -15,7 +15,7 @@ import { isNullOrEmptyArray, isNotEmptyArray } from '../shared/utils'
 
 export class TasksListModel {
     tasks: Task[] = []
-    filtersMeta: FilterMetaInfo[] = []
+    filtersMeta: FieldMetaInfo[] = []
     filterBoxes: FilterBox[]
     filtersConfig: FilterConfigModel
 }
@@ -34,16 +34,16 @@ export class TasksListComponent implements OnInit {
         private configService: FiltersConfigService) {
 
         this.Model = new TasksListModel();
-        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Status", "status", TaskConverter.taskStatusEnumConverter));
-        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Type", "type", TaskConverter.taskTypeEnumConverter));
-        this.Model.filtersMeta.push(new EnumListFilterMetaInfo("Color", "color", TaskConverter.taskColorEnumConverter));
+        this.Model.filtersMeta.push(new EnumListMetaInfo("Status", "status", TaskModelConverter.taskStatusEnumConverter));
+        this.Model.filtersMeta.push(new EnumListMetaInfo("Type", "type", TaskModelConverter.taskTypeEnumConverter));
+        this.Model.filtersMeta.push(new EnumListMetaInfo("Color", "color", TaskModelConverter.taskColorEnumConverter));
     }
 
     get diagnostic() { return JSON.stringify(this.Model, null, 2); }
 
     ngOnInit() {
         this.tasksService.getTasks().then(taskDTOs => {
-            let tasks = taskDTOs.map(x => TaskConverter.BuildFromDTO(x));
+            let tasks = taskDTOs.map(x => TaskModelConverter.BuildFromDTO(x));
             this.Model.tasks = tasks;
         });
 

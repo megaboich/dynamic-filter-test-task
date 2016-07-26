@@ -14,34 +14,35 @@ export class FilterNode {
     parameters: FilterNode[]
 }
 
-export enum FilterUserInputType {
+export class FilterConfigModel {
+    name: string
+    filter: FilterNode
+}
+
+export enum UserInputType {
     enumlist,
     datetime,
 }
 
-export class FilterMetaInfo {
+export class FieldMetaInfo {
     configFieldName: string
     modelFieldName: string
-    userInputType: FilterUserInputType
+    userInputType: UserInputType
 
-    constructor(configFieldName: string, modelFieldName: string, userInputType: FilterUserInputType) {
+    constructor(configFieldName: string, modelFieldName: string, userInputType: UserInputType) {
         this.configFieldName = configFieldName;
         this.modelFieldName = modelFieldName;
         this.userInputType = userInputType;
     }
 }
 
-export class EnumListFilterMetaInfo extends FilterMetaInfo {
+export class EnumListMetaInfo extends FieldMetaInfo {
     enumConverter: EnumConverter;
 
     constructor(configFieldName: string, modelFieldName: string, enumConverter: EnumConverter) {
-        super(configFieldName, modelFieldName, FilterUserInputType.enumlist)
+        super(configFieldName, modelFieldName, UserInputType.enumlist)
 
         this.enumConverter = enumConverter;
     }
 }
 
-export class FilterConfigModel {
-    name: string
-    filter: FilterNode
-}
